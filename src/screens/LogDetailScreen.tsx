@@ -1,0 +1,154 @@
+import React, { useEffect } from 'react';
+import {
+  View,
+  Text,
+  StyleSheet,
+  SafeAreaView,
+  TouchableOpacity,
+  Alert,
+  Image,
+  ScrollView,
+} from 'react-native';
+import { useNavigation, useRoute, RouteProp } from '@react-navigation/native';
+import { RootStackParamList } from '../navigation/types';
+import { useOshiStore } from '../store/useOshiStore';
+
+type RouteT = RouteProp<RootStackParamList, 'LogDetail'>;
+
+export default function LogDetailScreen() {
+  const navigation = useNavigation();
+  const route = useRoute<RouteT>();
+  const { logId } = route.params;
+
+  const { logs, oshis, removeLog, loadLogs } = useOshiStore();
+  const log = logs.find((l) => l.id === logId);
+  const oshi = oshis.find((o) => o.id === log?.oshi_id);
+
+  useEffect(() => {
+    loadLogs();
+  }, []);
+
+  if (!log) {
+    return (
+      <SafeAreaView style={styles.container}>
+        <Text style={styles.notFound}>記録が見つかりません</Text>
+      </SafeAreaView>
+    );
+  }
+
+  const handleDelete = () => {
+    Alert.alert('記録を削除', 'この記録を削除しますか？', [
+      { text: 'キャンセル', style: 'cancel' },
+      {
+        text: '削除',
+        style: 'destructive',
+        onPress: () => {
+          removeLog(logId);
+          navigation.goBack();
+        },
+      },
+    ]);
+  };
+
+  return (
+    <SafeAreaView style={styles.container}>
+      <ScrollView contentContainerStyle={styles.content}>
+        {/* ヘッダー */}
+        <View style={[styles.header, { backgroundColor: oshi?.color ?? '#E91E8C' }]}>
+          <Text style={styles.typeLarge}>{log.type}</Text>
+          <Text style={styles.oshiNameHeader}>{oshi?.name ?? '不明'}</Text>
+        </View>
+
+        {/* 詳細 */}
+        <View style={styles.card}>
+          <Row label="日付" value={log.date} />
+          {log.amount > 0 && (
+            <Row label="金額" value={`¥${log.amount.toLocaleString()}`} />
+          )}
+          {log.memo ? <Row label="メモ" value={log.memo} multiline /> : null}
+        </View>
+
+        {/* 写真 */}
+        {log.photo_path ? (
+          <Image source={{ uri: log.photo_path }} style={styles.photo} resizeMode="cover" />
+        ) : null}
+
+        {/* 削除ボタン */}
+        <TouchableOpacity style={styles.deleteButton} onPress={handleDelete}>
+          <Text style={styles.deleteText}>この記録を削除</Text>
+        </TouchableOpacity>
+      </ScrollView>
+    </SafeAreaView>
+  );
+}
+
+function Row({
+  label,
+  value,
+  multiline,
+}: {
+  label: string;
+  value: string;
+  multiline?: boolean;
+}) {
+  return (
+    <View style={[rowStyles.row, multiline && rowStyles.rowMulti]}>
+      <Text style={rowStyles.label}>{label}</Text>
+      <Text style={[rowStyles.value, multiline && rowStyles.valueMulti]}>{value}</Text>
+    </View>
+  );
+}
+
+const rowStyles = StyleSheet.create({
+  row: {
+    flexDirection: 'row',
+    justifyContent: 'space-between',
+    paddingVertical: 12,
+    borderBottomWidth: 1,
+    borderBottomColor: '#f5f5f5',
+  },
+  rowMulti: { flexDirection: 'column', gap: 4 },
+  label: { fontSize: 13, color: '#aaa', fontWeight: '600' },
+  value: { fontSize: 15, color: '#333' },
+  valueMulti: { marginTop: 4 },
+});
+
+const styles = StyleSheet.create({
+  container: { flex: 1, backgroundColor: '#FFF5F8' },
+  content: { gap: 16 },
+  header: {
+    padding: 24,
+    alignItems: 'center',
+    gap: 4,
+  },
+  typeLarge: { fontSize: 28, color: '#fff', fontWeight: 'bold' },
+  oshiNameHeader: { fontSize: 16, color: 'rgba(255,255,255,0.85)' },
+  card: {
+    backgroundColor: '#fff',
+    marginHorizontal: 16,
+    borderRadius: 12,
+    padding: 16,
+    shadowColor: '#000',
+    shadowOffset: { width: 0, height: 1 },
+    shadowOpacity: 0.06,
+    shadowRadius: 3,
+    elevation: 1,
+  },
+  photo: {
+    marginHorizontal: 16,
+    borderRadius: 12,
+    width: '100%',
+    height: 200,
+  },
+  deleteButton: {
+    marginHorizontal: 16,
+    marginBottom: 32,
+    padding: 14,
+    borderRadius: 12,
+    borderWidth: 1,
+    borderColor: '#E91E8C',
+    alignItems: 'center',
+  },
+  deleteText: { color: '#E91E8C', fontWeight: '600', fontSize: 15 },
+  notFound: { textAlign: 'center', color: '#aaa', marginTop: 40 },
+});
