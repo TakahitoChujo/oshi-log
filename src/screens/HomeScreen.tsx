@@ -1,4 +1,4 @@
-import React, { useEffect } from 'react';
+import React, { useEffect, useMemo } from 'react';
 import {
   View,
   Text,
@@ -12,19 +12,23 @@ import { Oshi } from '../types';
 import { NativeStackNavigationProp } from '@react-navigation/native-stack';
 import { RootStackParamList } from '../navigation/types';
 import { useNavigation } from '@react-navigation/native';
+import ColorDot from '../components/ColorDot';
+import { primaryColor } from '../utils/color';
+import { s, vs, fs } from '../utils/responsive';
 
 type Nav = NativeStackNavigationProp<RootStackParamList>;
 
 function OshiCard({ oshi }: { oshi: Oshi }) {
   const navigation = useNavigation<Nav>();
-  const logs = useOshiStore((s) => s.logs.filter((l) => l.oshi_id === oshi.id));
+  const allLogs = useOshiStore((s) => s.logs);
+  const logs = useMemo(() => allLogs.filter((l) => l.oshi_id === oshi.id), [allLogs, oshi.id]);
 
   return (
     <TouchableOpacity
-      style={[styles.card, { borderLeftColor: oshi.color }]}
+      style={[styles.card, { borderLeftColor: primaryColor(oshi.color) }]}
       onPress={() => navigation.navigate('LogList', { oshiId: oshi.id })}
     >
-      <View style={[styles.colorDot, { backgroundColor: oshi.color }]} />
+      <ColorDot color={oshi.color} size={s(40)} style={{ marginRight: s(12) }} />
       <View style={styles.cardBody}>
         <Text style={styles.oshiName}>{oshi.name}</Text>
         {oshi.group_name ? (
@@ -89,57 +93,52 @@ const styles = StyleSheet.create({
     flexDirection: 'row',
     justifyContent: 'space-between',
     alignItems: 'center',
-    padding: 16,
-    paddingTop: 20,
+    paddingHorizontal: s(16),
+    paddingTop: vs(20),
+    paddingBottom: vs(8),
   },
-  title: { fontSize: 22, fontWeight: 'bold', color: '#333' },
-  addButton: { fontSize: 16, color: '#E91E8C', fontWeight: '600' },
-  list: { padding: 16, gap: 12 },
+  title: { fontSize: fs(22), fontWeight: 'bold', color: '#333' },
+  addButton: { fontSize: fs(16), color: '#E91E8C', fontWeight: '600' },
+  list: { paddingHorizontal: s(16), gap: vs(12) },
   card: {
     backgroundColor: '#fff',
-    borderRadius: 12,
-    padding: 16,
+    borderRadius: s(12),
+    padding: s(16),
     flexDirection: 'row',
     alignItems: 'center',
-    borderLeftWidth: 4,
+    borderLeftWidth: s(4),
     shadowColor: '#000',
     shadowOffset: { width: 0, height: 1 },
     shadowOpacity: 0.08,
     shadowRadius: 4,
     elevation: 2,
   },
-  colorDot: {
-    width: 40,
-    height: 40,
-    borderRadius: 20,
-    marginRight: 12,
-  },
   cardBody: { flex: 1 },
-  oshiName: { fontSize: 16, fontWeight: 'bold', color: '#333' },
-  groupName: { fontSize: 13, color: '#888', marginTop: 2 },
-  logCount: { fontSize: 12, color: '#aaa', marginTop: 4 },
-  empty: { flex: 1, justifyContent: 'center', alignItems: 'center', gap: 16 },
-  emptyText: { fontSize: 18, color: '#aaa' },
+  oshiName: { fontSize: fs(16), fontWeight: 'bold', color: '#333' },
+  groupName: { fontSize: fs(13), color: '#888', marginTop: vs(2) },
+  logCount: { fontSize: fs(12), color: '#aaa', marginTop: vs(4) },
+  empty: { flex: 1, justifyContent: 'center', alignItems: 'center', gap: vs(16) },
+  emptyText: { fontSize: fs(18), color: '#aaa' },
   emptyButton: {
     backgroundColor: '#E91E8C',
-    paddingHorizontal: 24,
-    paddingVertical: 12,
-    borderRadius: 24,
+    paddingHorizontal: s(24),
+    paddingVertical: vs(12),
+    borderRadius: s(24),
   },
-  emptyButtonText: { color: '#fff', fontWeight: 'bold', fontSize: 16 },
+  emptyButtonText: { color: '#fff', fontWeight: 'bold', fontSize: fs(16) },
   fab: {
     position: 'absolute',
-    bottom: 24,
-    right: 24,
+    bottom: vs(24),
+    right: s(24),
     backgroundColor: '#E91E8C',
-    paddingHorizontal: 20,
-    paddingVertical: 14,
-    borderRadius: 28,
+    paddingHorizontal: s(20),
+    paddingVertical: vs(14),
+    borderRadius: s(28),
     shadowColor: '#E91E8C',
     shadowOffset: { width: 0, height: 4 },
     shadowOpacity: 0.4,
     shadowRadius: 8,
     elevation: 6,
   },
-  fabText: { color: '#fff', fontWeight: 'bold', fontSize: 16 },
+  fabText: { color: '#fff', fontWeight: 'bold', fontSize: fs(16) },
 });

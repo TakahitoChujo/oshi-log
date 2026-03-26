@@ -12,6 +12,8 @@ import {
 import { useNavigation, useRoute, RouteProp } from '@react-navigation/native';
 import { RootStackParamList } from '../navigation/types';
 import { useOshiStore } from '../store/useOshiStore';
+import ColorBg from '../components/ColorBg';
+import { s, vs, fs } from '../utils/responsive';
 
 type RouteT = RouteProp<RootStackParamList, 'LogDetail'>;
 
@@ -53,13 +55,11 @@ export default function LogDetailScreen() {
   return (
     <SafeAreaView style={styles.container}>
       <ScrollView contentContainerStyle={styles.content}>
-        {/* ヘッダー */}
-        <View style={[styles.header, { backgroundColor: oshi?.color ?? '#E91E8C' }]}>
+        <ColorBg color={oshi?.color ?? '#E91E8C'} style={styles.header}>
           <Text style={styles.typeLarge}>{log.type}</Text>
           <Text style={styles.oshiNameHeader}>{oshi?.name ?? '不明'}</Text>
-        </View>
+        </ColorBg>
 
-        {/* 詳細 */}
         <View style={styles.card}>
           <Row label="日付" value={log.date} />
           {log.amount > 0 && (
@@ -68,12 +68,10 @@ export default function LogDetailScreen() {
           {log.memo ? <Row label="メモ" value={log.memo} multiline /> : null}
         </View>
 
-        {/* 写真 */}
         {log.photo_path ? (
           <Image source={{ uri: log.photo_path }} style={styles.photo} resizeMode="cover" />
         ) : null}
 
-        {/* 削除ボタン */}
         <TouchableOpacity style={styles.deleteButton} onPress={handleDelete}>
           <Text style={styles.deleteText}>この記録を削除</Text>
         </TouchableOpacity>
@@ -103,31 +101,31 @@ const rowStyles = StyleSheet.create({
   row: {
     flexDirection: 'row',
     justifyContent: 'space-between',
-    paddingVertical: 12,
+    paddingVertical: vs(12),
     borderBottomWidth: 1,
     borderBottomColor: '#f5f5f5',
   },
-  rowMulti: { flexDirection: 'column', gap: 4 },
-  label: { fontSize: 13, color: '#aaa', fontWeight: '600' },
-  value: { fontSize: 15, color: '#333' },
-  valueMulti: { marginTop: 4 },
+  rowMulti: { flexDirection: 'column', gap: vs(4) },
+  label: { fontSize: fs(13), color: '#aaa', fontWeight: '600' },
+  value: { fontSize: fs(15), color: '#333' },
+  valueMulti: { marginTop: vs(4) },
 });
 
 const styles = StyleSheet.create({
   container: { flex: 1, backgroundColor: '#FFF5F8' },
-  content: { gap: 16 },
+  content: { gap: vs(16) },
   header: {
-    padding: 24,
+    padding: s(24),
     alignItems: 'center',
-    gap: 4,
+    gap: vs(4),
   },
-  typeLarge: { fontSize: 28, color: '#fff', fontWeight: 'bold' },
-  oshiNameHeader: { fontSize: 16, color: 'rgba(255,255,255,0.85)' },
+  typeLarge: { fontSize: fs(28), color: '#fff', fontWeight: 'bold' },
+  oshiNameHeader: { fontSize: fs(16), color: 'rgba(255,255,255,0.85)' },
   card: {
     backgroundColor: '#fff',
-    marginHorizontal: 16,
-    borderRadius: 12,
-    padding: 16,
+    marginHorizontal: s(16),
+    borderRadius: s(12),
+    padding: s(16),
     shadowColor: '#000',
     shadowOffset: { width: 0, height: 1 },
     shadowOpacity: 0.06,
@@ -135,20 +133,20 @@ const styles = StyleSheet.create({
     elevation: 1,
   },
   photo: {
-    marginHorizontal: 16,
-    borderRadius: 12,
+    marginHorizontal: s(16),
+    borderRadius: s(12),
     width: '100%',
-    height: 200,
+    height: vs(200),
   },
   deleteButton: {
-    marginHorizontal: 16,
-    marginBottom: 32,
-    padding: 14,
-    borderRadius: 12,
+    marginHorizontal: s(16),
+    marginBottom: vs(32),
+    padding: s(14),
+    borderRadius: s(12),
     borderWidth: 1,
     borderColor: '#E91E8C',
     alignItems: 'center',
   },
-  deleteText: { color: '#E91E8C', fontWeight: '600', fontSize: 15 },
-  notFound: { textAlign: 'center', color: '#aaa', marginTop: 40 },
+  deleteText: { color: '#E91E8C', fontWeight: '600', fontSize: fs(15) },
+  notFound: { textAlign: 'center', color: '#aaa', marginTop: vs(40), fontSize: fs(14) },
 });

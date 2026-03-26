@@ -1,6 +1,6 @@
 {
   "expo": {
-    "name": "oshi-log",
+    "name": "推しログ帳",
     "slug": "oshi-log",
     "version": "1.0.0",
     "orientation": "portrait",
@@ -9,10 +9,17 @@
     "splash": {
       "image": "./assets/splash-icon.png",
       "resizeMode": "contain",
-      "backgroundColor": "#ffffff"
+      "backgroundColor": "#FFF5F8"
     },
     "ios": {
-      "supportsTablet": true
+      "supportsTablet": true,
+      "bundleIdentifier": "com.toyland.oshi-log",
+      "buildNumber": "1",
+      "infoPlist": {
+        "NSPhotoLibraryUsageDescription": "推し活の写真を記録に添付するために使用します",
+        "NSCameraUsageDescription": "推し活の写真を撮影するために使用します",
+        "ITSAppUsesNonExemptEncryption": false
+      }
     },
     "android": {
       "adaptiveIcon": {
@@ -25,6 +32,11 @@
     },
     "web": {
       "favicon": "./assets/favicon.png"
+    },
+    "extra": {
+      "eas": {
+        "projectId": ""
+      }
     }
   }
 }

@@ -30,6 +30,12 @@ yarn-error.*
 .DS_Store
 *.pem
 
+# MCP config
+.mcp.json
+
+# Screenshots
+Simulator Screenshot*
+
 # local env files
 .env*.local
 

@@ -13,6 +13,8 @@ import { useNavigation } from '@react-navigation/native';
 import { NativeStackNavigationProp } from '@react-navigation/native-stack';
 import { RootStackParamList } from '../navigation/types';
 import { Oshi } from '../types';
+import ColorDot from '../components/ColorDot';
+import { s, vs, fs } from '../utils/responsive';
 
 type Nav = NativeStackNavigationProp<RootStackParamList>;
 
@@ -37,7 +39,7 @@ function OshiSettingRow({ oshi }: { oshi: Oshi }) {
 
   return (
     <View style={styles.row}>
-      <View style={[styles.dot, { backgroundColor: oshi.color }]} />
+      <ColorDot color={oshi.color} size={s(32)} style={{ marginRight: s(10) }} />
       <View style={styles.info}>
         <Text style={styles.name}>{oshi.name}</Text>
         {oshi.group_name ? <Text style={styles.group}>{oshi.group_name}</Text> : null}
@@ -102,40 +104,39 @@ export default function SettingsScreen() {
 
 const styles = StyleSheet.create({
   container: { flex: 1, backgroundColor: '#FFF5F8' },
-  header: { padding: 16, paddingTop: 20 },
-  title: { fontSize: 22, fontWeight: 'bold', color: '#333' },
+  header: { paddingHorizontal: s(16), paddingTop: vs(20) },
+  title: { fontSize: fs(22), fontWeight: 'bold', color: '#333' },
   section: {
     backgroundColor: '#fff',
-    marginHorizontal: 16,
-    marginBottom: 16,
-    borderRadius: 12,
-    padding: 16,
+    marginHorizontal: s(16),
+    marginBottom: vs(16),
+    borderRadius: s(12),
+    padding: s(16),
     shadowColor: '#000',
     shadowOffset: { width: 0, height: 1 },
     shadowOpacity: 0.06,
     shadowRadius: 3,
     elevation: 1,
   },
-  sectionHeader: { flexDirection: 'row', justifyContent: 'space-between', marginBottom: 12 },
-  sectionTitle: { fontSize: 15, fontWeight: 'bold', color: '#333' },
-  addText: { color: '#E91E8C', fontWeight: '600' },
-  empty: { color: '#aaa', textAlign: 'center', paddingVertical: 12 },
+  sectionHeader: { flexDirection: 'row', justifyContent: 'space-between', marginBottom: vs(12) },
+  sectionTitle: { fontSize: fs(15), fontWeight: 'bold', color: '#333' },
+  addText: { color: '#E91E8C', fontWeight: '600', fontSize: fs(14) },
+  empty: { color: '#aaa', textAlign: 'center', paddingVertical: vs(12), fontSize: fs(14) },
   row: {
     flexDirection: 'row',
     alignItems: 'center',
-    paddingVertical: 10,
+    paddingVertical: vs(10),
     borderTopWidth: 1,
     borderTopColor: '#f5f5f5',
   },
-  dot: { width: 32, height: 32, borderRadius: 16, marginRight: 10 },
   info: { flex: 1 },
-  name: { fontSize: 14, fontWeight: 'bold', color: '#333' },
-  group: { fontSize: 12, color: '#aaa' },
-  editButton: { paddingHorizontal: 10, paddingVertical: 6 },
-  editText: { color: '#666', fontSize: 13 },
-  deleteButton: { paddingHorizontal: 10, paddingVertical: 6 },
-  deleteText: { color: '#E91E8C', fontSize: 13 },
-  infoRow: { flexDirection: 'row', justifyContent: 'space-between', paddingVertical: 8 },
-  infoLabel: { color: '#666', fontSize: 14 },
-  infoValue: { color: '#333', fontSize: 14 },
+  name: { fontSize: fs(14), fontWeight: 'bold', color: '#333' },
+  group: { fontSize: fs(12), color: '#aaa' },
+  editButton: { paddingHorizontal: s(10), paddingVertical: vs(6) },
+  editText: { color: '#666', fontSize: fs(13) },
+  deleteButton: { paddingHorizontal: s(10), paddingVertical: vs(6) },
+  deleteText: { color: '#E91E8C', fontSize: fs(13) },
+  infoRow: { flexDirection: 'row', justifyContent: 'space-between', paddingVertical: vs(8) },
+  infoLabel: { color: '#666', fontSize: fs(14) },
+  infoValue: { color: '#333', fontSize: fs(14) },
 });

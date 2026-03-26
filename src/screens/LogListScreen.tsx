@@ -11,6 +11,8 @@ import { useNavigation, useRoute, RouteProp } from '@react-navigation/native';
 import { NativeStackNavigationProp } from '@react-navigation/native-stack';
 import { RootStackParamList } from '../navigation/types';
 import { useOshiStore } from '../store/useOshiStore';
+import ColorBg from '../components/ColorBg';
+import { s, vs, fs } from '../utils/responsive';
 
 type Nav = NativeStackNavigationProp<RootStackParamList>;
 type RouteT = RouteProp<RootStackParamList, 'LogList'>;
@@ -27,8 +29,11 @@ export default function LogListScreen() {
   useEffect(() => {
     loadOshis();
     loadLogs();
+  }, []);
+
+  useEffect(() => {
     if (oshi) navigation.setOptions({ title: oshi.name });
-  }, [oshi]);
+  }, [oshi?.name]);
 
   return (
     <SafeAreaView style={styles.container}>
@@ -52,9 +57,9 @@ export default function LogListScreen() {
               style={styles.card}
               onPress={() => navigation.navigate('LogDetail', { logId: item.id })}
             >
-              <View style={[styles.typeBadge, { backgroundColor: oshi?.color ?? '#E91E8C' }]}>
+              <ColorBg color={oshi?.color ?? '#E91E8C'} style={styles.typeBadge}>
                 <Text style={styles.typeText}>{item.type}</Text>
-              </View>
+              </ColorBg>
               <View style={styles.cardBody}>
                 <Text style={styles.date}>{item.date}</Text>
                 {item.memo ? (
@@ -70,10 +75,12 @@ export default function LogListScreen() {
       )}
 
       <TouchableOpacity
-        style={[styles.fab, { backgroundColor: oshi?.color ?? '#E91E8C' }]}
+        style={styles.fab}
         onPress={() => navigation.navigate('LogForm', { oshiId })}
       >
-        <Text style={styles.fabText}>＋ 記録</Text>
+        <ColorBg color={oshi?.color ?? '#E91E8C'} style={styles.fabBg}>
+          <Text style={styles.fabText}>＋ 記録</Text>
+        </ColorBg>
       </TouchableOpacity>
     </SafeAreaView>
   );
@@ -81,11 +88,11 @@ export default function LogListScreen() {
 
 const styles = StyleSheet.create({
   container: { flex: 1, backgroundColor: '#FFF5F8' },
-  list: { padding: 16, gap: 10 },
+  list: { padding: s(16), gap: vs(10) },
   card: {
     backgroundColor: '#fff',
-    borderRadius: 12,
-    padding: 14,
+    borderRadius: s(12),
+    padding: s(14),
     flexDirection: 'row',
     alignItems: 'center',
     shadowColor: '#000',
@@ -95,37 +102,41 @@ const styles = StyleSheet.create({
     elevation: 1,
   },
   typeBadge: {
-    paddingHorizontal: 10,
-    paddingVertical: 6,
-    borderRadius: 8,
-    marginRight: 12,
+    paddingHorizontal: s(10),
+    paddingVertical: vs(6),
+    borderRadius: s(8),
+    marginRight: s(12),
   },
-  typeText: { color: '#fff', fontSize: 12, fontWeight: '600' },
+  typeText: { color: '#fff', fontSize: fs(12), fontWeight: '600' },
   cardBody: { flex: 1 },
-  date: { fontSize: 13, color: '#888' },
-  memo: { fontSize: 14, color: '#333', marginTop: 2 },
-  amount: { fontSize: 14, color: '#E91E8C', fontWeight: '600' },
-  empty: { flex: 1, justifyContent: 'center', alignItems: 'center', gap: 16 },
-  emptyText: { fontSize: 16, color: '#aaa' },
+  date: { fontSize: fs(13), color: '#888' },
+  memo: { fontSize: fs(14), color: '#333', marginTop: vs(2) },
+  amount: { fontSize: fs(14), color: '#E91E8C', fontWeight: '600' },
+  empty: { flex: 1, justifyContent: 'center', alignItems: 'center', gap: vs(16) },
+  emptyText: { fontSize: fs(16), color: '#aaa' },
   addButton: {
     backgroundColor: '#E91E8C',
-    paddingHorizontal: 24,
-    paddingVertical: 12,
-    borderRadius: 24,
+    paddingHorizontal: s(24),
+    paddingVertical: vs(12),
+    borderRadius: s(24),
   },
-  addText: { color: '#fff', fontWeight: 'bold', fontSize: 15 },
+  addText: { color: '#fff', fontWeight: 'bold', fontSize: fs(15) },
   fab: {
     position: 'absolute',
-    bottom: 24,
-    right: 24,
-    paddingHorizontal: 20,
-    paddingVertical: 14,
-    borderRadius: 28,
+    bottom: vs(24),
+    right: s(24),
+    borderRadius: s(28),
     shadowColor: '#000',
     shadowOffset: { width: 0, height: 4 },
     shadowOpacity: 0.3,
     shadowRadius: 6,
     elevation: 6,
+    overflow: 'hidden',
   },
-  fabText: { color: '#fff', fontWeight: 'bold', fontSize: 16 },
+  fabBg: {
+    paddingHorizontal: s(20),
+    paddingVertical: vs(14),
+    alignItems: 'center' as const,
+  },
+  fabText: { color: '#fff', fontWeight: 'bold', fontSize: fs(16) },
 });

@@ -1,13 +1,12 @@
-import React, { useEffect } from 'react';
+import React from 'react';
 import { StatusBar } from 'expo-status-bar';
 import AppNavigator from './src/navigation/AppNavigator';
 import { initDatabase } from './src/db/database';
 
-export default function App() {
-  useEffect(() => {
-    initDatabase();
-  }, []);
+// テーブル作成をレンダー前に同期実行
+initDatabase();
 
+export default function App() {
   return (
     <>
       <StatusBar style="dark" />

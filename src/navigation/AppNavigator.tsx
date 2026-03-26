@@ -2,7 +2,7 @@ import React from 'react';
 import { NavigationContainer } from '@react-navigation/native';
 import { createBottomTabNavigator } from '@react-navigation/bottom-tabs';
 import { createNativeStackNavigator } from '@react-navigation/native-stack';
-import { Text } from 'react-native';
+import { Ionicons } from '@expo/vector-icons';
 
 import HomeScreen from '../screens/HomeScreen';
 import CalendarScreen from '../screens/CalendarScreen';
@@ -17,10 +17,6 @@ import { RootStackParamList, TabParamList } from './types';
 
 const Tab = createBottomTabNavigator<TabParamList>();
 const Stack = createNativeStackNavigator<RootStackParamList>();
-
-function TabIcon({ label, emoji }: { label: string; emoji: string }) {
-  return <Text style={{ fontSize: 22 }}>{emoji}</Text>;
-}
 
 function MainTabs() {
   return (
@@ -37,8 +33,8 @@ function MainTabs() {
         component={HomeScreen}
         options={{
           tabBarLabel: 'ホーム',
-          tabBarIcon: ({ focused }) => (
-            <TabIcon emoji="🏠" label="ホーム" />
+          tabBarIcon: ({ color, size }) => (
+            <Ionicons name="home-outline" size={size} color={color} />
           ),
         }}
       />
@@ -47,7 +43,9 @@ function MainTabs() {
         component={CalendarScreen}
         options={{
           tabBarLabel: 'カレンダー',
-          tabBarIcon: () => <TabIcon emoji="📅" label="カレンダー" />,
+          tabBarIcon: ({ color, size }) => (
+            <Ionicons name="calendar-outline" size={size} color={color} />
+          ),
         }}
       />
       <Tab.Screen
@@ -55,7 +53,9 @@ function MainTabs() {
         component={StatsScreen}
         options={{
           tabBarLabel: '統計',
-          tabBarIcon: () => <TabIcon emoji="📊" label="統計" />,
+          tabBarIcon: ({ color, size }) => (
+            <Ionicons name="bar-chart-outline" size={size} color={color} />
+          ),
         }}
       />
       <Tab.Screen
@@ -63,7 +63,9 @@ function MainTabs() {
         component={SettingsScreen}
         options={{
           tabBarLabel: '設定',
-          tabBarIcon: () => <TabIcon emoji="⚙️" label="設定" />,
+          tabBarIcon: ({ color, size }) => (
+            <Ionicons name="settings-outline" size={size} color={color} />
+          ),
         }}
       />
     </Tab.Navigator>

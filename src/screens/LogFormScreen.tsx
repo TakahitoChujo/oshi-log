@@ -12,6 +12,9 @@ import { useNavigation, useRoute, RouteProp } from '@react-navigation/native';
 import { RootStackParamList } from '../navigation/types';
 import { useOshiStore } from '../store/useOshiStore';
 import { LogType } from '../types';
+import { primaryColor } from '../utils/color';
+import { Calendar } from 'react-native-calendars';
+import { s, vs, fs } from '../utils/responsive';
 
 type RouteT = RouteProp<RootStackParamList, 'LogForm'>;
 
@@ -31,6 +34,7 @@ export default function LogFormScreen() {
   const [oshiId, setOshiId] = useState<number | null>(preselectedOshiId ?? null);
   const [type, setType] = useState<LogType>('ライブ');
   const [date, setDate] = useState(toDateString(new Date()));
+  const [showCalendar, setShowCalendar] = useState(false);
   const [amount, setAmount] = useState('');
   const [memo, setMemo] = useState('');
 
@@ -54,7 +58,6 @@ export default function LogFormScreen() {
 
   return (
     <ScrollView style={styles.container} contentContainerStyle={styles.content}>
-      {/* 推し選択 */}
       <View style={styles.field}>
         <Text style={styles.label}>推し *</Text>
         <ScrollView horizontal showsHorizontalScrollIndicator={false}>
@@ -62,7 +65,7 @@ export default function LogFormScreen() {
             {oshis.map((o) => (
               <TouchableOpacity
                 key={o.id}
-                style={[styles.chip, oshiId === o.id && { backgroundColor: o.color, borderColor: o.color }]}
+                style={[styles.chip, oshiId === o.id && { backgroundColor: primaryColor(o.color), borderColor: primaryColor(o.color) }]}
                 onPress={() => setOshiId(o.id)}
               >
                 <Text style={[styles.chipText, oshiId === o.id && styles.chipTextActive]}>
@@ -74,7 +77,6 @@ export default function LogFormScreen() {
         </ScrollView>
       </View>
 
-      {/* 種別 */}
       <View style={styles.field}>
         <Text style={styles.label}>種別 *</Text>
         <View style={styles.chips}>
@@ -90,19 +92,32 @@ export default function LogFormScreen() {
         </View>
       </View>
 
-      {/* 日付 */}
       <View style={styles.field}>
         <Text style={styles.label}>日付 *</Text>
-        <TextInput
+        <TouchableOpacity
           style={styles.input}
-          value={date}
-          onChangeText={setDate}
-          placeholder="YYYY-MM-DD"
-          placeholderTextColor="#ccc"
-        />
+          onPress={() => setShowCalendar(!showCalendar)}
+        >
+          <Text style={{ fontSize: fs(16), color: '#333' }}>{date}</Text>
+        </TouchableOpacity>
+        {showCalendar && (
+          <Calendar
+            current={date}
+            onDayPress={(day: { dateString: string }) => {
+              setDate(day.dateString);
+              setShowCalendar(false);
+            }}
+            markedDates={{
+              [date]: { selected: true, selectedColor: '#E91E8C' },
+            }}
+            theme={{
+              todayTextColor: '#E91E8C',
+              arrowColor: '#E91E8C',
+            }}
+          />
+        )}
       </View>
 
-      {/* 金額 */}
       <View style={styles.field}>
         <Text style={styles.label}>金額（任意）</Text>
         <TextInput
@@ -115,7 +130,6 @@ export default function LogFormScreen() {
         />
       </View>
 
-      {/* メモ */}
       <View style={styles.field}>
         <Text style={styles.label}>メモ（任意）</Text>
         <TextInput
@@ -138,37 +152,37 @@ export default function LogFormScreen() {
 
 const styles = StyleSheet.create({
   container: { flex: 1, backgroundColor: '#FFF5F8' },
-  content: { padding: 20, gap: 20 },
-  field: { gap: 8 },
-  label: { fontSize: 14, fontWeight: '600', color: '#555' },
+  content: { padding: s(20), gap: vs(20) },
+  field: { gap: vs(8) },
+  label: { fontSize: fs(14), fontWeight: '600', color: '#555' },
   input: {
     backgroundColor: '#fff',
-    borderRadius: 10,
-    padding: 14,
-    fontSize: 16,
+    borderRadius: s(10),
+    padding: s(14),
+    fontSize: fs(16),
     borderWidth: 1,
     borderColor: '#eee',
     color: '#333',
   },
-  textarea: { height: 100, textAlignVertical: 'top' },
-  chips: { flexDirection: 'row', flexWrap: 'wrap', gap: 8 },
+  textarea: { height: vs(100), textAlignVertical: 'top' },
+  chips: { flexDirection: 'row', flexWrap: 'wrap', gap: s(8) },
   chip: {
-    paddingHorizontal: 14,
-    paddingVertical: 8,
-    borderRadius: 20,
+    paddingHorizontal: s(14),
+    paddingVertical: vs(8),
+    borderRadius: s(20),
     borderWidth: 1,
     borderColor: '#ddd',
     backgroundColor: '#fff',
   },
   chipActive: { backgroundColor: '#E91E8C', borderColor: '#E91E8C' },
-  chipText: { color: '#666', fontSize: 14 },
+  chipText: { color: '#666', fontSize: fs(14) },
   chipTextActive: { color: '#fff' },
   saveButton: {
     backgroundColor: '#E91E8C',
-    borderRadius: 12,
-    padding: 16,
+    borderRadius: s(12),
+    padding: s(16),
     alignItems: 'center',
-    marginTop: 8,
+    marginTop: vs(8),
   },
-  saveText: { color: '#fff', fontWeight: 'bold', fontSize: 16 },
+  saveText: { color: '#fff', fontWeight: 'bold', fontSize: fs(16) },
 });

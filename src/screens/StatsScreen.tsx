@@ -9,8 +9,10 @@ import {
 } from 'react-native';
 import { useOshiStore } from '../store/useOshiStore';
 import { getTotalAmountByOshiId, getLogCountByOshiId } from '../db/database';
+import ColorDot from '../components/ColorDot';
 import ViewShot from 'react-native-view-shot';
 import * as Sharing from 'expo-sharing';
+import { s, vs, fs } from '../utils/responsive';
 
 export default function StatsScreen() {
   const { oshis, logs, loadOshis, loadLogs } = useOshiStore();
@@ -46,7 +48,6 @@ export default function StatsScreen() {
       </View>
 
       <ScrollView contentContainerStyle={styles.scroll}>
-        {/* シェア対象のビュー */}
         <ViewShot ref={viewShotRef} options={{ format: 'png', quality: 1 }}>
           <View style={styles.shareCard}>
             <Text style={styles.monthLabel}>{thisMonth} の推し活まとめ</Text>
@@ -61,7 +62,7 @@ export default function StatsScreen() {
               const monthCount = thisMonthLogs.filter((l) => l.oshi_id === oshi.id).length;
               return (
                 <View key={oshi.id} style={styles.oshiRow}>
-                  <View style={[styles.dot, { backgroundColor: oshi.color }]} />
+                  <ColorDot color={oshi.color} size={s(36)} style={{ marginRight: s(12) }} />
                   <View style={styles.oshiInfo}>
                     <Text style={styles.oshiName}>{oshi.name}</Text>
                     <Text style={styles.oshiSub}>{oshi.group_name}</Text>
@@ -87,42 +88,42 @@ const styles = StyleSheet.create({
     flexDirection: 'row',
     justifyContent: 'space-between',
     alignItems: 'center',
-    padding: 16,
-    paddingTop: 20,
+    paddingHorizontal: s(16),
+    paddingTop: vs(20),
+    paddingBottom: vs(8),
   },
-  title: { fontSize: 22, fontWeight: 'bold', color: '#333' },
+  title: { fontSize: fs(22), fontWeight: 'bold', color: '#333' },
   shareButton: {
     backgroundColor: '#E91E8C',
-    paddingHorizontal: 16,
-    paddingVertical: 8,
-    borderRadius: 20,
+    paddingHorizontal: s(16),
+    paddingVertical: vs(8),
+    borderRadius: s(20),
   },
-  shareText: { color: '#fff', fontWeight: 'bold', fontSize: 14 },
-  scroll: { padding: 16 },
+  shareText: { color: '#fff', fontWeight: 'bold', fontSize: fs(14) },
+  scroll: { padding: s(16) },
   shareCard: {
     backgroundColor: '#fff',
-    borderRadius: 16,
-    padding: 20,
+    borderRadius: s(16),
+    padding: s(20),
     shadowColor: '#000',
     shadowOffset: { width: 0, height: 2 },
     shadowOpacity: 0.08,
     shadowRadius: 8,
     elevation: 3,
   },
-  monthLabel: { fontSize: 18, fontWeight: 'bold', color: '#333', marginBottom: 4 },
-  subLabel: { fontSize: 13, color: '#888', marginBottom: 16 },
+  monthLabel: { fontSize: fs(18), fontWeight: 'bold', color: '#333', marginBottom: vs(4) },
+  subLabel: { fontSize: fs(13), color: '#888', marginBottom: vs(16) },
   oshiRow: {
     flexDirection: 'row',
     alignItems: 'center',
-    paddingVertical: 12,
+    paddingVertical: vs(12),
     borderTopWidth: 1,
     borderTopColor: '#f0f0f0',
   },
-  dot: { width: 36, height: 36, borderRadius: 18, marginRight: 12 },
   oshiInfo: { flex: 1 },
-  oshiName: { fontSize: 15, fontWeight: 'bold', color: '#333' },
-  oshiSub: { fontSize: 12, color: '#aaa', marginTop: 2 },
+  oshiName: { fontSize: fs(15), fontWeight: 'bold', color: '#333' },
+  oshiSub: { fontSize: fs(12), color: '#aaa', marginTop: vs(2) },
   oshiStats: { alignItems: 'flex-end' },
-  statValue: { fontSize: 13, color: '#E91E8C', fontWeight: '600' },
-  statSub: { fontSize: 11, color: '#bbb', marginTop: 2 },
+  statValue: { fontSize: fs(13), color: '#E91E8C', fontWeight: '600' },
+  statSub: { fontSize: fs(11), color: '#bbb', marginTop: vs(2) },
 });
