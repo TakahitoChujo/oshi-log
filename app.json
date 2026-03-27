@@ -35,8 +35,9 @@
     },
     "extra": {
       "eas": {
-        "projectId": ""
+        "projectId": "e961a0f9-f320-4949-8448-ff9917ef7a50"
       }
-    }
+    },
+    "owner": "toyland"
   }
 }
